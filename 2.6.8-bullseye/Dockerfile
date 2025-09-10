@@ -1,22 +1,18 @@
 FROM debian:bullseye-slim
 ENV RUBY_VER=2.6.8
+ARG TARGETPLATFORM
 
-# Generally useful packages
-RUN DEBIAN_FRONTEND=noninteractive \
-    apt-get update && \
-    DEBIAN_FRONTEND=noninteractive \
+RUN --mount=type=bind,target=/buildcontext \
+    set -eux; \
+    export DEBIAN_FRONTEND=noninteractive; \
+    apt-get update; \
     apt-get -y --no-install-recommends install \
-    ca-certificates \
-    curl \
-    file \
-    lsof \
-    gpg \
-    gpg-agent \
-    unzip \
-    vim-tiny \
-    nano \
-    procps \
-    less
+      ca-certificates \
+      gpg \
+      gpg-agent \
+    ; \
+    /buildcontext/install_useful_packages.sh; \
+    rm -rf /var/lib/apt/lists/*
 
 # Install OpenSSL and Ruby
 # TODO: remove OpenSSL 1 after upgrading to ruby 3.1
@@ -63,4 +59,4 @@ RUN set -eux; \
     rm -rf /root/.cache; \
     rm -rf /tmp/*;
 
-COPY 20-set-docker-prompt.sh /etc/profile.d/
+COPY util/20-set-docker-prompt.sh /etc/profile.d/

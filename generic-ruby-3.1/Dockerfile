@@ -1,0 +1,11 @@
+ARG RUBY_VER=3.1.7
+ARG DEBIAN_REL=slim
+FROM docker.io/library/ruby:${RUBY_VER}-${DEBIAN_REL}
+
+RUN --mount=type=bind,target=/buildcontext \
+    set -eux; \
+    apt-get update; \
+    /buildcontext/install_useful_packages.sh; \
+    rm -rf /var/lib/apt/lists/*;
+
+COPY util/20-set-docker-prompt.sh /etc/profile.d/
