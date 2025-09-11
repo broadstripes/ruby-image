@@ -33,9 +33,12 @@ jobs:
         dockerfile="${TAG}/Dockerfile"
         if [[ -f "$dockerfile" ]]; then
             echo "Dockerfile found!"
-        elif [[ -n $(echo "3.3.5" | grep '^3.[1-9]') ]]; then
+        elif [[ -n $(echo '${{ inputs.ruby-ver }}' | grep '^3.[1-9]') ]]; then
             echo "Ruby version is >= 3.1, using generic Dockerfile"
             dockerfile="generic-ruby-3.1/Dockerfile"
+        elif [[ '${{ inputs.debian-rel }}' = "trixie" ]]; then
+            echo "Falling back to legacy OpenSSL 1 / Debian Trixie"
+            dockerfile="generic-openssl1-trixie/Dockerfile"
         else
             echo "Couldn't find a Dockerfile!"
             exit 1
