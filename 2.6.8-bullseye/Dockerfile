@@ -2,8 +2,7 @@ FROM debian:bullseye-slim
 ENV RUBY_VER=2.6.8
 ARG TARGETPLATFORM
 
-RUN --mount=type=bind,target=/buildcontext \
-    set -eux; \
+RUN set -eux; \
     export DEBIAN_FRONTEND=noninteractive; \
     apt-get update; \
     apt-get -y --no-install-recommends install \
@@ -11,7 +10,6 @@ RUN --mount=type=bind,target=/buildcontext \
       gpg \
       gpg-agent \
     ; \
-    /buildcontext/install_useful_packages.sh; \
     rm -rf /var/lib/apt/lists/*
 
 # Install OpenSSL and Ruby
@@ -58,5 +56,8 @@ RUN set -eux; \
     apt-get purge --yes --auto-remove build-essential; \
     rm -rf /root/.cache; \
     rm -rf /tmp/*;
+
+RUN --mount=type=bind,target=/buildcontext \
+    /buildcontext/install_useful_packages.sh
 
 COPY util/20-set-docker-prompt.sh /etc/profile.d/

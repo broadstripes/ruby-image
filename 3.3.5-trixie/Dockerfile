@@ -2,17 +2,14 @@ FROM debian:trixie-slim
 ENV RUBY_VER=3.3.5
 ARG TARGETPLATFORM
 
-RUN --mount=type=bind,target=/buildcontext \
-    set -eux; \
-    export DEBIAN_FRONTEND=noninteractive; \
+RUN set -eux; \
     apt-get update; \
     apt-get -y --no-install-recommends install \
       ca-certificates \
       gpg \
       gpg-agent \
     ; \
-    /buildcontext/install_useful_packages.sh; \
-    rm -rf /var/lib/apt/lists/*
+    apt-get dist-clean
 
 # Install OpenSSL and Ruby
 # TODO: remove OpenSSL 1 after upgrading to ruby 3.1
@@ -58,5 +55,8 @@ RUN set -eux; \
     apt-get purge --yes --auto-remove build-essential; \
     rm -rf /root/.cache; \
     rm -rf /tmp/*;
+
+RUN --mount=type=bind,target=/buildcontext \
+    /buildcontext/install_useful_packages.sh
 
 COPY util/20-set-docker-prompt.sh /etc/profile.d/

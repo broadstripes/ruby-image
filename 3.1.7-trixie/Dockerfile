@@ -1,13 +1,9 @@
 ARG RUBY_VER=3.1.7
 FROM docker.io/library/debian:trixie-slim
 
-RUN --mount=type=bind,target=/buildcontext \
-    set -eux; \
+RUN set -eux; \
     apt-get update; \
-    apt-get -y --no-install-recommends install \
-      ca-certificates \
-    ; \
-    /buildcontext/install_useful_packages.sh; \
+    apt-get -y --no-install-recommends install ca-certificates; \
     apt-get dist-clean
 
 # skip installing gem documentation with `gem install`/`gem update`
@@ -89,9 +85,6 @@ RUN set -eux; \
     chmod 1777 "$GEM_HOME"
 
 RUN --mount=type=bind,target=/buildcontext \
-    set -eux; \
-    apt-get update; \
-    /buildcontext/install_useful_packages.sh; \
-    rm -rf /var/lib/apt/lists/*;
+    /buildcontext/install_useful_packages.sh
 
 COPY util/20-set-docker-prompt.sh /etc/profile.d/
