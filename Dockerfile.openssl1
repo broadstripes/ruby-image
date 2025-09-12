@@ -1,4 +1,5 @@
-FROM docker.io/library/debian:trixie-slim
+ARG DEBIAN_REL=slim
+FROM docker.io/library/debian:$DEBIAN_REL
 ARG RUBY_VER=2.7.8
 ARG TARGETPLATFORM
 

@@ -30,15 +30,11 @@ jobs:
       run: |
         set -euxo pipefail
 
-        dockerfile="${TAG}/Dockerfile"
+        dockerfile='${{ inputs.ruby-ver }}/${{ inputs.debian-rel }}/Dockerfile'
+        # resolve symlinks
+        dockerfile=$(realpath --relative-to "$(pwd)" "$dockerfile")
         if [[ -f "$dockerfile" ]]; then
             echo "Dockerfile found!"
-        elif [[ -n $(echo '${{ inputs.ruby-ver }}' | grep '^3.[1-9]') ]]; then
-            echo "Ruby version is >= 3.1, using generic Dockerfile"
-            dockerfile="generic-ruby-3.1/Dockerfile"
-        elif [[ '${{ inputs.debian-rel }}' = "trixie" ]]; then
-            echo "Falling back to legacy OpenSSL 1 / Debian Trixie"
-            dockerfile="generic-openssl1-trixie/Dockerfile"
         else
             echo "Couldn't find a Dockerfile!"
             exit 1
@@ -83,6 +79,9 @@ jobs:
         labels: ${{ steps.meta.outputs.labels }}
         tags: ${{ inputs.image }}
         platforms: linux/${{ env.PLATFORM }}
+        build-args: |
+          DEBIAN_REL=${{ inputs.debian-rel }}
+          RUBY_VER=${{ inputs.ruby-ver }}
         cache-from: type=registry,ref=${{ env.CACHE_IMAGE }},mode=max
         cache-to: type=registry,ref=${{ env.CACHE_IMAGE }},mode=max
         outputs: type=image,push-by-digest=true,name-canonical=true,push=true
