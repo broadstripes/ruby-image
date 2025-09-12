@@ -1,6 +1,6 @@
 ARG RUBY_VER=3.1.7
-ARG DEBIAN_REL=slim
-FROM docker.io/library/ruby:${RUBY_VER}-${DEBIAN_REL}
+ARG DEBIAN_REL=trixie
+FROM docker.io/library/ruby:${RUBY_VER}-slim-${DEBIAN_REL}
 
 RUN --mount=type=bind,target=/buildcontext \
     set -eux; \
