@@ -16,6 +16,7 @@ RUN set -eux; \
     apt-get update; \
     apt-get install -y --no-install-recommends \
         build-essential \
+        curl \
     ; \
     cd $(mktemp -d); \
     openssl_host="github.com/openssl/openssl/releases/download"; \
@@ -62,7 +63,10 @@ ENV LANG=C.UTF-8
 RUN set -eux; \
     \
     apt-get update; \
-    apt-get install -y --no-install-recommends build-essential; \
+    apt-get install -y --no-install-recommends \
+        build-essential \
+        curl \
+    ; \
     cd $(mktemp -d); \
     ruby_i_host="github.com/postmodern/ruby-install/archive"; \
     ruby_i_ver="0.10.1"; \

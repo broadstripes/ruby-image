@@ -9,6 +9,7 @@ RUN set -eux; \
       ca-certificates \
       gpg \
       gpg-agent \
+      curl \
     ; \
     rm -rf /var/lib/apt/lists/*
 

@@ -8,6 +8,7 @@ RUN set -eux; \
       ca-certificates \
       gpg \
       gpg-agent \
+      curl \
     ; \
     apt-get dist-clean
 
